@@ -50,10 +50,16 @@ of javascript output.
 
 # install
 
-With [npm](https://npmjs.org) do:
+With [npm](https://npmjs.org), to get the library do:
 
 ```
 npm install browser-pack
+```
+
+and to get the command-line tool do:
+
+```
+npm install -g browser-pack
 ```
 
 # license

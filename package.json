@@ -1,0 +1,38 @@
+{
+    "name": "browser-pack",
+    "version": "0.0.0",
+    "description": "pack node-style source files from a json stream into a browser bundle",
+    "main": "index.js",
+    "dependencies": {
+        "JSONStream": "~0.4.3",
+        "duplexer": "~0.0.3",
+        "through": "~2.1.0"
+    },
+    "devDependencies": {
+        "tap": "~0.4.0",
+        "tape": "~0.2.2"
+    },
+    "scripts": {
+        "test": "tap test/*.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/substack/browser-pack.git"
+    },
+    "homepage": "https://github.com/substack/browser-pack",
+    "keywords": [
+        "browser",
+        "bundle",
+        "commonjs",
+        "commonj-esque",
+        "exports",
+        "module.exports",
+        "require"
+    ],
+    "author": {
+        "name": "James Halliday",
+        "email": "mail@substack.net",
+        "url": "http://substack.net"
+    },
+    "license": "MIT"
+}

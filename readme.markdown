@@ -1,6 +1,6 @@
 # browser-bundle
 
-pack node-style source files from a json stream into one or more browser bundles
+pack node-style source files from a json stream into a browser bundle
 
 # example
 

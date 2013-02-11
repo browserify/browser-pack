@@ -3,6 +3,9 @@
     "version": "0.0.0",
     "description": "pack node-style source files from a json stream into a browser bundle",
     "main": "index.js",
+    "bin": {
+        "browser-pack": "cmd.js"
+    },
     "dependencies": {
         "JSONStream": "~0.4.3",
         "duplexer": "~0.0.3",

@@ -47,10 +47,13 @@ $ browser-pack < input.json
 var pack = require('browser-pack');
 ```
 
-## pack()
+## pack(opts)
 
 Return a through stream that takes a stream of json input and produces a stream
 of javascript output.
+
+If `opts.raw` is given, the writable end of the stream will expect objects to be
+written to it instead of expecting a stream of json text it will need to parse.
 
 # install
 

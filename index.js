@@ -18,8 +18,9 @@ var prelude = [
     '})({'
 ].join('');
 
-module.exports = function () {
-    var parser = JSONStream.parse([ true ]);
+module.exports = function (opts) {
+    if (!opts) opts = {};
+    var parser = opts.raw ? through() : JSONStream.parse([ true ]);
     var output = through(write, end);
     parser.pipe(output);
     

@@ -1,6 +1,6 @@
 {
     "name": "browser-pack",
-    "version": "0.0.0",
+    "version": "0.1.0",
     "description": "pack node-style source files from a json stream into a browser bundle",
     "main": "index.js",
     "bin": {

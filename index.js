@@ -6,6 +6,7 @@ var prelude = [
     '(function(p,c,e){',
         'function r(n){',
             'if(!c[n]){',
+                'if(!p[n])return;',
                 'c[n]={exports:{}};',
                 'p[n][0](function(x){',
                     'return r(p[n][1][x])',

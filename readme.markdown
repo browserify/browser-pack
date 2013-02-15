@@ -50,7 +50,11 @@ var pack = require('browser-pack');
 ## pack(opts)
 
 Return a through stream that takes a stream of json input and produces a stream
-of javascript output.
+of javascript output. This module does not export its internal `require()`
+function but you can prepend `'var require='` to the stream contents to get the
+require function. `require()` will return `undefined` when a module hasn't been
+defined to support splitting up modules across several bundles with custom
+fallback logic.
 
 If `opts.raw` is given, the writable end of the stream will expect objects to be
 written to it instead of expecting a stream of json text it will need to parse.

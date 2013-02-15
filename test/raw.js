@@ -2,7 +2,7 @@ var test = require('tape');
 var pack = require('../');
 
 test('raw', function (t) {
-    t.plan(4);
+    t.plan(5);
     
     var p = pack({ raw: true });
     var src = '';
@@ -11,6 +11,7 @@ test('raw', function (t) {
         var r = Function(['T'], 'return ' + src)(t);
         t.equal(r('xyz')(5), 555);
         t.equal(r('xyz')(5), 555);
+        t.equal(r('zzz'), undefined);
     });
     
     p.write({

@@ -37,7 +37,7 @@ module.exports = function (opts) {
             (first ? '' : ','),
             JSON.stringify(row.id),
             ':[',
-            'function(require,module,exports){' + row.source + '}',
+            'function(require,module,exports){' + row.source + '\n}',
             ',',
             JSON.stringify(row.deps || {}),
             ']'

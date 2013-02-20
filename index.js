@@ -27,6 +27,7 @@ module.exports = function (opts) {
     
     var first = true;
     var entries = [];
+    var order = []; 
     
     return duplexer(parser, output);
     
@@ -44,7 +45,10 @@ module.exports = function (opts) {
         ].join(''));
         
         first = false;
-        entries.push(row.id);
+        if (row.order !== undefined) {
+            entries.splice(row.order, 0, row.id);
+        }
+        else entries.push(row.id);
     }
     
     function end () {

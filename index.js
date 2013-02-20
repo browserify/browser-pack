@@ -45,10 +45,10 @@ module.exports = function (opts) {
         ].join(''));
         
         first = false;
-        if (row.order !== undefined) {
+        if (row.entry && row.order !== undefined) {
             entries.splice(row.order, 0, row.id);
         }
-        else entries.push(row.id);
+        else if (row.entry) entries.push(row.id);
     }
     
     function end () {

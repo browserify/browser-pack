@@ -32,9 +32,9 @@ module.exports = function (opts) {
     return duplexer(parser, output);
     
     function write (row) {
-        if (first) output.emit('data', prelude);
+        if (first) this.queue(prelude);
         
-        this.emit('data', [
+        this.queue([
             (first ? '' : ','),
             JSON.stringify(row.id),
             ':[',
@@ -52,9 +52,9 @@ module.exports = function (opts) {
     }
     
     function end () {
-        if (first) output.emit('data', prelude);
+        if (first) this.queue(prelude);
         
-        this.emit('data', '},{},' + JSON.stringify(entries) + ')');
-        this.emit('end');
+        this.queue('},{},' + JSON.stringify(entries) + ')');
+        this.queue(null);
     }
 };

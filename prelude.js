@@ -1,14 +1,28 @@
-module.exports = function(p,c,e){
-    function r(n){
-        if(!c[n]){
-            if(!p[n])return;
-            c[n]={exports:{}};
-            p[n][0](function(x){
-                return r(p[n][1][x])
-            },c[n],c[n].exports);
+
+// modules are defined as an array
+// [ module function, map of requireuires ]
+//
+// map of requireuires is short require name -> numeric require
+//
+// anything defined in a previous bundle is accessed via the
+// orig method which is the requireuire for previous bundles
+
+module.exports = function(parent_req, modules, cache, entry) {
+    function require(name){
+        if(!cache[name]) {
+            if(!modules[name]) {
+                if (parent_req) return parent_req(name);
+                throw new Error('Cannot find module \'' + name + '\'');
+            }
+            var m = cache[name] = {exports:{}};
+            modules[name][0](function(x){
+                var id = modules[name][1][x];
+                // if we cannot find the item within our internal map revert to parent
+                return id ? require(id) : parent_req(x);
+            },m,m.exports);
         }
-        return c[n].exports
+        return cache[name].exports
     }
-    for(var i=0;i<e.length;i++)r(e[i]);
-    return r
-};
+    for(var i=0;i<entry.length;i++) require(entry[i]);
+    return require;
+}

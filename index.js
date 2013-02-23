@@ -2,7 +2,7 @@ var JSONStream = require('JSONStream');
 var duplexer = require('duplexer');
 var through = require('through');
 
-var prelude = '(' + require('./prelude').toString() + ')({';
+var prelude = '(' + require('./prelude').toString() + ')(typeof require !== "undefined"&&require, {';
 
 module.exports = function (opts) {
     if (!opts) opts = {};

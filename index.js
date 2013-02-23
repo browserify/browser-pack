@@ -8,7 +8,7 @@ var path = require('path');
 
 var prelude = (function () {
     var src = fs.readFileSync(path.join(__dirname, 'prelude.js'), 'utf8');
-    return uglify(src) + '(typeof require !== "undefined"&&require, {'
+    return uglify(src) + '(typeof require!=="undefined"&&require,{'
 })();
 
 module.exports = function (opts) {

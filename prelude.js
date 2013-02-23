@@ -7,7 +7,7 @@
 // anything defined in a previous bundle is accessed via the
 // orig method which is the requireuire for previous bundles
 
-module.exports = function(parent_req, modules, cache, entry) {
+(function(parent_req, modules, cache, entry) {
     function require(name){
         if(!cache[name]) {
             if(!modules[name]) {
@@ -25,4 +25,4 @@ module.exports = function(parent_req, modules, cache, entry) {
     }
     for(var i=0;i<entry.length;i++) require(entry[i]);
     return require;
-}
+})

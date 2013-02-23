@@ -1,8 +1,15 @@
 var JSONStream = require('JSONStream');
 var duplexer = require('duplexer');
 var through = require('through');
+var uglify = require('uglify-js');
 
-var prelude = '(' + require('./prelude').toString() + ')(typeof require !== "undefined"&&require, {';
+var fs = require('fs');
+var path = require('path');
+
+var prelude = (function () {
+    var src = fs.readFileSync(path.join(__dirname, 'prelude.js'), 'utf8');
+    return uglify(src) + '(typeof require !== "undefined"&&require, {'
+})();
 
 module.exports = function (opts) {
     if (!opts) opts = {};

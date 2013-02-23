@@ -11,7 +11,9 @@ test('trailing comment', function (t) {
         var r = Function(['T'], 'return ' + src)(t);
         t.equal(r('xyz')(5), 555);
         t.equal(r('xyz')(5), 555);
-        t.equal(r('zzz'), undefined);
+        t.throws(function() {
+            r('zzz');
+        }, /Cannot find module 'zzz'/);
     });
     
     p.write({

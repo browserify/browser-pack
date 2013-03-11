@@ -36,13 +36,15 @@ module.exports = function (opts) {
     return duplexer(parser, output);
     
     function addMappings(row) {
-      generator = generator || createGenerator();
+      generator = generator || createGenerator({ sourceRoot: row.sourceRoot });
       var offset = { line: lineno, column: 0 };
 
       if (row.mappings && row.mappings.length)
           generator.addMappings(row.sourceFile, row.mappings, offset);
       else 
           generator.addGeneratedMappings(row.sourceFile, row.source, offset);
+
+      generator.addSourceContent(row.sourceFile, row.source);
     }
 
     function write (row) {

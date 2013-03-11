@@ -11,7 +11,7 @@
         "duplexer": "~0.0.3",
         "through": "~2.2.0",
         "uglify-js": "1.3.4",
-        "inline-source-map": "~0.1.3"
+        "inline-source-map": "~0.2.1"
     },
     "devDependencies": {
         "tap": "~0.4.0",

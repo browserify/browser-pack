@@ -44,7 +44,8 @@ module.exports = function (opts) {
       else 
           generator.addGeneratedMappings(row.sourceFile, row.source, offset);
 
-      generator.addSourceContent(row.sourceFile, row.source);
+      var sourceContent = row.sourceContent ? row.sourceContent : row.source;
+      generator.addSourceContent(row.sourceFile, sourceContent);
     }
 
     function write (row) {

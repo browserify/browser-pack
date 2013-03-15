@@ -52,7 +52,7 @@ module.exports = function (opts) {
         
         if (row.sourceFile) addMappings(row);
 
-        wrappedSource = [
+        var wrappedSource = [
             (first ? '' : ','),
             JSON.stringify(row.id),
             ':[',

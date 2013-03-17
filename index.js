@@ -40,15 +40,19 @@ module.exports = function (opts) {
         
         if (row.sourceFile) { 
             sourcemap = sourcemap || combineSourceMap.create();
-            sourcemap.addFile({ sourceFile: row.sourceFile, source: row.source }, { line: lineno });
+            sourcemap.addFile(
+                { sourceFile: row.sourceFile, source: row.source },
+                { line: lineno }
+            );
         }
-
+        
         var wrappedSource = [
             (first ? '' : ','),
             JSON.stringify(row.id),
             ':[',
-            'function(require,module,exports){\n' + combineSourceMap.removeComments(row.source) + '\n}',
-            ',',
+            'function(require,module,exports){\n',
+            combineSourceMap.removeComments(row.source),
+            '\n},',
             JSON.stringify(row.deps || {}),
             ']'
         ].join('');

@@ -6,7 +6,7 @@ var uglify = require('uglify-js');
 var fs = require('fs');
 var path = require('path');
 
-var createGenerator = require('inline-source-map');
+var combineSourceMap = require('combine-source-map');
 
 var prelude = (function () {
     var src = fs.readFileSync(path.join(__dirname, 'prelude.js'), 'utf8');
@@ -31,32 +31,23 @@ module.exports = function (opts) {
     var order = []; 
     
     var lineno = 1 + newlinesIn(prelude);
-    var generator;
+    var sourcemap;
 
     return duplexer(parser, output);
     
-    function addMappings(row) {
-      generator = generator || createGenerator({ sourceRoot: row.sourceRoot });
-      var offset = { line: lineno, column: 0 };
-
-      if (row.mappings && row.mappings.length)
-          generator.addMappings(row.sourceFile, row.mappings, offset);
-      else 
-          generator.addGeneratedMappings(row.sourceFile, row.source, offset);
-
-      generator.addSourceContent(row.sourceFile, row.source);
-    }
-
     function write (row) {
         if (first) this.queue(prelude);
         
-        if (row.sourceFile) addMappings(row);
+        if (row.sourceFile) { 
+            sourcemap = sourcemap || combineSourceMap.create();
+            sourcemap.addFile({ sourceFile: row.sourceFile, source: row.source }, { line: lineno });
+        }
 
         var wrappedSource = [
             (first ? '' : ','),
             JSON.stringify(row.id),
             ':[',
-            'function(require,module,exports){\n' + row.source + '\n}',
+            'function(require,module,exports){\n' + combineSourceMap.removeComments(row.source) + '\n}',
             ',',
             JSON.stringify(row.deps || {}),
             ']'
@@ -76,7 +67,7 @@ module.exports = function (opts) {
         if (first) this.queue(prelude);
         
         this.queue('},{},' + JSON.stringify(entries) + ')');
-        if (generator) this.queue('\n' + generator.inlineMappingUrl());
+        if (sourcemap) this.queue('\n' + sourcemap.comment());
 
         this.queue(null);
     }

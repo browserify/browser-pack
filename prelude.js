@@ -8,7 +8,7 @@
 // orig method which is the requireuire for previous bundles
 
 (function(modules, cache, entry) {
-    function inner_req(name, jumped){
+    function innerReq(name, jumped){
         if(!cache[name]) {
             if(!modules[name]) {
                 // if we cannot find the item within our internal map jump to
@@ -20,11 +20,11 @@
             var m = cache[name] = {exports:{}};
             modules[name][0](function(x){
                 var id = modules[name][1][x];
-                return inner_req(id ? id : x);
+                return innerReq(id ? id : x);
             },m,m.exports);
         }
         return cache[name].exports
     }
-    for(var i=0;i<entry.length;i++) inner_req(entry[i]);
-    return inner_req;
+    for(var i=0;i<entry.length;i++) innerReq(entry[i]);
+    return innerReq;
 })

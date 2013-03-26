@@ -8,23 +8,35 @@
 // orig method which is the requireuire for previous bundles
 
 (function(modules, cache, entry) {
-    function innerReq(name, jumped){
+    // Save the require from previous bundle to this closure if any
+    var previousRequire = typeof require == "function" && require;
+
+    function newRequire(name, jumped){
         if(!cache[name]) {
             if(!modules[name]) {
-                // if we cannot find the item within our internal map jump to
-                // current root require go all requires down from there
-                var rootRequire = typeof require == "function" && require;
-                if (!jumped && rootRequire) return rootRequire(name, true);
+                // if we cannot find the the module within our internal map or
+                // cache jump to the current global require ie. the last bundle
+                // that was added to the page.
+                var currentRequire = typeof require == "function" && require;
+                if (!jumped && currentRequire) return currentRequire(name, true);
+
+                // If there are other bundles on this page the require from the
+                // previous one is saved to 'previousRequire'. Repeat this as
+                // many times as there are bundles until the module is found or
+                // we exhaust the require chain.
+                if (previousRequire) return previousRequire(name, true);
                 throw new Error('Cannot find module \'' + name + '\'');
             }
             var m = cache[name] = {exports:{}};
             modules[name][0](function(x){
                 var id = modules[name][1][x];
-                return innerReq(id ? id : x);
+                return newRequire(id ? id : x);
             },m,m.exports);
         }
-        return cache[name].exports
+        return cache[name].exports;
     }
-    for(var i=0;i<entry.length;i++) innerReq(entry[i]);
-    return innerReq;
+    for(var i=0;i<entry.length;i++) newRequire(entry[i]);
+
+    // Override the current require with this new one
+    return newRequire;
 })

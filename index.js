@@ -62,13 +62,14 @@ module.exports = function (opts) {
         
         first = false;
         if (row.entry && row.order !== undefined) {
-            entries.splice(row.order, 0, row.id);
+            entries[row.order] = row.id;
         }
         else if (row.entry) entries.push(row.id);
     }
     
     function end () {
         if (first) this.queue(prelude);
+        entries = entries.filter(function (x) { return x !== undefined });
         
         this.queue('},{},' + JSON.stringify(entries) + ')');
         if (sourcemap) this.queue('\n' + sourcemap.comment());

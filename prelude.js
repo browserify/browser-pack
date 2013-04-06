@@ -28,7 +28,7 @@
                 throw new Error('Cannot find module \'' + name + '\'');
             }
             var m = cache[name] = {exports:{}};
-            modules[name][0](function(x){
+            modules[name][0].call(m.exports, function(x){
                 var id = modules[name][1][x];
                 return newRequire(id ? id : x);
             },m,m.exports);

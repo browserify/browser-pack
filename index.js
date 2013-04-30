@@ -32,8 +32,10 @@ module.exports = function (opts) {
     
     var lineno = 1 + newlinesIn(prelude);
     var sourcemap;
+    var ret = duplexer(parser, output);
+    ret.sourcemap = sourcemap;
 
-    return duplexer(parser, output);
+    return ret;
     
     function write (row) {
         if (first) this.queue(prelude);

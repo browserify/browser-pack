@@ -10,7 +10,7 @@ var combineSourceMap = require('combine-source-map');
 
 var prelude = (function () {
     var src = fs.readFileSync(path.join(__dirname, 'prelude.js'), 'utf8');
-    return uglify(src) + '({';
+    return uglify(src);
 })();
 
 function newlinesIn(src) {
@@ -36,7 +36,7 @@ module.exports = function (opts) {
     return duplexer(parser, output);
     
     function write (row) {
-        if (first) this.queue(prelude);
+        if (first) this.queue((opts.prelude || prelude) + '({');
         
         if (row.sourceFile) { 
             sourcemap = sourcemap || combineSourceMap.create();

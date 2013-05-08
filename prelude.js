@@ -29,12 +29,14 @@
             }
             var m = cache[name] = {
                 exports: {},
-                parent: parent || null
+                parent: parent || null,
+                loaded: false
             };
             modules[name][0].call(m.exports, function(x){
                 var id = modules[name][1][x];
                 return newRequire(id ? id : x, false, m);
             },m,m.exports);
+            m.loaded = true;
         }
         return cache[name].exports;
     }

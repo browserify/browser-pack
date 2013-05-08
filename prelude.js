@@ -28,6 +28,7 @@
                 throw new Error('Cannot find module \'' + name + '\'');
             }
             var m = cache[name] = {
+                id: name,
                 exports: {},
                 parent: parent || null,
                 children: [],

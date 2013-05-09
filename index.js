@@ -2,6 +2,7 @@ var JSONStream = require('JSONStream');
 var duplexer = require('duplexer');
 var through = require('through');
 var uglify = require('uglify-js');
+var commondir = require('commondir');
 
 var fs = require('fs');
 var path = require('path');
@@ -22,13 +23,16 @@ function newlinesIn(src) {
 
 module.exports = function (opts) {
     if (!opts) opts = {};
+    if (opts.filenames === undefined) opts.filenames = true;
     var parser = opts.raw ? through() : JSONStream.parse([ true ]);
     var output = through(write, end);
     parser.pipe(output);
     
     var first = true;
     var entries = [];
-    var order = []; 
+    var order = [];
+
+    var allFilepaths = [], filenameMap = {};
     
     var lineno = 1 + newlinesIn(prelude);
     var sourcemap;
@@ -45,6 +49,8 @@ module.exports = function (opts) {
                 { line: lineno }
             );
         }
+        if (opts.filenames && (row.filename || row.sourceFile))
+            allFilepaths.push(filenameMap[row.id] = (row.filename || row.sourceFile).replace(/\\/g, '/'));
         
         var wrappedSource = [
             (first ? '' : ','),
@@ -70,8 +76,23 @@ module.exports = function (opts) {
     function end () {
         if (first) this.queue(prelude);
         entries = entries.filter(function (x) { return x !== undefined });
+
+        this.queue('},{},' + JSON.stringify(entries));
+        if (!opts.filenames || !allFilepaths.length) {
+            this.queue(',{}');
+        } else {
+            var basedir = opts.basedir
+             || commondir(allFilepaths.map(function (x) {
+                    return path.resolve(path.dirname(x));
+                }));
+
+            for (var id in filenameMap) 
+                filenameMap[id] = '/' + path.relative(basedir, filenameMap[id]).replace(/\\/g, '/');
+
+            this.queue(',' + JSON.stringify(filenameMap));
+        }
         
-        this.queue('},{},' + JSON.stringify(entries) + ')');
+        this.queue(')');
         if (sourcemap) this.queue('\n' + sourcemap.comment());
 
         this.queue(null);

@@ -6,19 +6,19 @@ var test = require('tape');
 var pack = require('../');
 
 test('this', function (t) {
-    t.plan(1);
+    t.plan(3);
 
     var p = pack();
     var src = '';
     p.on('data', function (buf) { src += buf; });
     p.on('end', function () {
-        var r = Function([], 'return ' + src)();
+        var r = Function(['T'], 'return ' + src)(t);
         t.deepEqual(r("abc"), { foo: "bar" });
     });
 
     p.end(JSON.stringify([{
         id: 'abc',
-        source: 'this.foo = "bar"'
+        source: 'this.foo = "bar"; T.equal(require, module.require); T.equal(module.require.call(null, module.id), module.exports);'
     }]));
 
 });

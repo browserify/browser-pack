@@ -11,7 +11,8 @@
         "duplexer": "~0.0.3",
         "through": "~2.2.0",
         "uglify-js": "1.3.4",
-        "combine-source-map": "~0.1.1"
+        "combine-source-map": "~0.1.1",
+        "commondir": "0.0.1"
 
     },
     "devDependencies": {

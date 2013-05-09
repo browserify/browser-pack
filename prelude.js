@@ -33,6 +33,7 @@
                     var id = modules[name][1][x];
                     return newRequire(id ? id : x, false, m);
                 },
+                filename: modules[name][2],
                 exports: {},
                 parent: parent || null,
                 children: [],

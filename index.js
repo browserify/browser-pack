@@ -54,6 +54,8 @@ module.exports = function (opts) {
             combineSourceMap.removeComments(row.source),
             '\n},',
             JSON.stringify(row.deps || {}),
+            ',',
+            JSON.stringify((row.filename || row.sourceFile || row.id).replace(/\\/g, '/')),
             ']'
         ].join('');
 

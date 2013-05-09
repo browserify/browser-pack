@@ -2,6 +2,7 @@ var JSONStream = require('JSONStream');
 var duplexer = require('duplexer');
 var through = require('through');
 var uglify = require('uglify-js');
+var commondir = require('commondir');
 
 var fs = require('fs');
 var path = require('path');
@@ -78,20 +79,13 @@ module.exports = function (opts) {
         if (!allFilepaths.length) {
             this.queue(',{}');
         } else {
-            // Find the Lowest Common Ancestor (O(depth * count))
-            // Always include at least the parent directory name.
-            var dirnameSplits = allFilepaths.map(function (p) { return path.dirname(path.dirname(p)).split('/'); });
-            var commonLength = 0;
-            for (var i = 0; i < dirnameSplits[0].length; i++) {
-                if (dirnameSplits.some(function (parts) { return parts[i] !== dirnameSplits[0][i]; }))
-                    break;      // If some of the paths are different at this part, stop.
-
-                commonLength += dirnameSplits[0][i].length;
-                if (i) commonLength++;  // Count the separator too
-            }
+            var basedir = opts.basedir
+             || commondir(allFilepaths.map(function (x) {
+                    return path.resolve(path.dirname(x));
+                }));
 
             for (var id in filenameMap) 
-                filenameMap[id] = filenameMap[id].slice(commonLength);
+                filenameMap[id] = '/' + path.relative(basedir, filenameMap[id]).replace(/\\/g, '/');
 
             this.queue(',' + JSON.stringify(filenameMap));
         }

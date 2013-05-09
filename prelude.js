@@ -7,7 +7,7 @@
 // anything defined in a previous bundle is accessed via the
 // orig method which is the requireuire for previous bundles
 
-(function(modules, cache, entry) {
+(function(modules, cache, entry, filenames) {
     // Save the require from previous bundle to this closure if any
     var previousRequire = typeof require == "function" && require;
 
@@ -33,7 +33,7 @@
                     var id = modules[name][1][x];
                     return newRequire(id ? id : x, false, m);
                 },
-                filename: modules[name][2],
+                filename: filenames[name],  // filenames are passed in a separate map so that we can compute LCA after everything is finished
                 exports: {},
                 parent: parent || null,
                 children: [],

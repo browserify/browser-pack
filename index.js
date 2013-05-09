@@ -28,7 +28,9 @@ module.exports = function (opts) {
     
     var first = true;
     var entries = [];
-    var order = []; 
+    var order = [];
+
+    var allFilepaths = [], filenameMap = {};
     
     var lineno = 1 + newlinesIn(prelude);
     var sourcemap;
@@ -45,6 +47,7 @@ module.exports = function (opts) {
                 { line: lineno }
             );
         }
+        allFilepaths.push(filenameMap[row.id] = (row.filename || row.sourceFile || row.id).replace(/\\/g, '/'));
         
         var wrappedSource = [
             (first ? '' : ','),
@@ -54,8 +57,6 @@ module.exports = function (opts) {
             combineSourceMap.removeComments(row.source),
             '\n},',
             JSON.stringify(row.deps || {}),
-            ',',
-            JSON.stringify((row.filename || row.sourceFile || row.id).replace(/\\/g, '/')),
             ']'
         ].join('');
 
@@ -72,8 +73,30 @@ module.exports = function (opts) {
     function end () {
         if (first) this.queue(prelude);
         entries = entries.filter(function (x) { return x !== undefined });
+
+        this.queue('},{},' + JSON.stringify(entries));
+        if (!allFilepaths.length) {
+            this.queue('{}');
+        } else {
+            // Find the Lowest Common Ancestor (O(depth * count))
+            // Always include at least the parent directory name.
+            var dirnameSplits = allFilepaths.map(function (p) { return path.dirname(path.dirname(p)).split('/'); });
+            var commonLength = 0;
+            for (var i = 0; i < dirnameSplits[0].length; i++) {
+                if (dirnameSplits.some(function (parts) { return parts[i] !== dirnameSplits[0][i]; }))
+                    break;      // If some of the paths are different at this part, stop.
+
+                commonLength += dirnameSplits[0][i].length;
+                if (i) commonLength++;  // Count the separator too
+            }
+
+            for (var id in filenameMap) 
+                filenameMap[id] = filenameMap[id].slice(commonLength);
+
+            this.queue(',' + JSON.stringify(filenameMap));
+        }
         
-        this.queue('},{},' + JSON.stringify(entries) + ')');
+        this.queue(')');
         if (sourcemap) this.queue('\n' + sourcemap.comment());
 
         this.queue(null);

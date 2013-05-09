@@ -23,6 +23,7 @@ function newlinesIn(src) {
 
 module.exports = function (opts) {
     if (!opts) opts = {};
+    if (opts.filenames === undefined) opts.filenames = true;
     var parser = opts.raw ? through() : JSONStream.parse([ true ]);
     var output = through(write, end);
     parser.pipe(output);
@@ -48,7 +49,8 @@ module.exports = function (opts) {
                 { line: lineno }
             );
         }
-        allFilepaths.push(filenameMap[row.id] = (row.filename || row.sourceFile || row.id).replace(/\\/g, '/'));
+        if (opts.filenames && (row.filename || row.sourceFile))
+            allFilepaths.push(filenameMap[row.id] = (row.filename || row.sourceFile).replace(/\\/g, '/'));
         
         var wrappedSource = [
             (first ? '' : ','),
@@ -76,7 +78,7 @@ module.exports = function (opts) {
         entries = entries.filter(function (x) { return x !== undefined });
 
         this.queue('},{},' + JSON.stringify(entries));
-        if (!allFilepaths.length) {
+        if (!opts.filenames || !allFilepaths.length) {
             this.queue(',{}');
         } else {
             var basedir = opts.basedir

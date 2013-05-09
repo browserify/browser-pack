@@ -33,7 +33,7 @@
                     var id = modules[name][1][x];
                     return newRequire(id ? id : x, false, m);
                 },
-                filename: filenames[name],  // filenames are passed in a separate map so that we can compute LCA after everything is finished
+                filename: filenames[name] || name,  // filenames are passed in a separate map so that we can compute LCA after everything is finished
                 exports: {},
                 parent: parent || null,
                 children: [],

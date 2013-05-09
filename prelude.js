@@ -29,6 +29,10 @@
             }
             var m = cache[name] = {
                 id: name,
+                require: function(x){
+                    var id = modules[name][1][x];
+                    return newRequire(id ? id : x, false, m);
+                },
                 exports: {},
                 parent: parent || null,
                 children: [],
@@ -36,10 +40,7 @@
             };
             if (parent && parent.children)
                 parent.children.push(m);
-            modules[name][0].call(m.exports, function(x){
-                var id = modules[name][1][x];
-                return newRequire(id ? id : x, false, m);
-            },m,m.exports);
+            modules[name][0].call(m.exports,m.require,m,m.exports);
             m.loaded = true;
         }
         return cache[name].exports;

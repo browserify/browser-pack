@@ -76,7 +76,7 @@ module.exports = function (opts) {
 
         this.queue('},{},' + JSON.stringify(entries));
         if (!allFilepaths.length) {
-            this.queue('{}');
+            this.queue(',{}');
         } else {
             // Find the Lowest Common Ancestor (O(depth * count))
             // Always include at least the parent directory name.

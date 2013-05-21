@@ -62,6 +62,10 @@ written to it instead of expecting a stream of json text it will need to parse.
 Additionally, rows with a truthy `entry` may have an `order` field that
 determines the numeric index to execute the entries in.
 
+You can specify a custom prelude with `opts.prelude` but you should really know
+what you're doing first. See the `prelude.js` file in this repo for the default
+prelude.
+
 # install
 
 With [npm](https://npmjs.org), to get the library do:

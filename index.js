@@ -68,7 +68,7 @@ module.exports = function (opts) {
     }
     
     function end () {
-        if (first) this.queue(prelude);
+        if (first) this.queue(prelude + '({');
         entries = entries.filter(function (x) { return x !== undefined });
         
         this.queue('},{},' + JSON.stringify(entries) + ')');

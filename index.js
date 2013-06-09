@@ -1,17 +1,13 @@
 var JSONStream = require('JSONStream');
 var duplexer = require('duplexer');
 var through = require('through');
-var uglify = require('uglify-js');
 
 var fs = require('fs');
 var path = require('path');
 
 var combineSourceMap = require('combine-source-map');
 
-var prelude = (function () {
-    var src = fs.readFileSync(path.join(__dirname, 'prelude.js'), 'utf8');
-    return uglify(src);
-})();
+var prelude = fs.readFileSync(path.join(__dirname, '_prelude.js'), 'utf8');
 
 function newlinesIn(src) {
   if (!src) return 0;

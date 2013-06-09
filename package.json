@@ -4,24 +4,25 @@
     "description": "pack node-style source files from a json stream into a browser bundle",
     "main": "index.js",
     "bin": {
-        "browser-pack": "cmd.js"
+        "browser-pack": "bin/cmd.js"
     },
     "dependencies": {
         "JSONStream": "~0.4.3",
         "duplexer": "~0.0.3",
         "through": "~2.2.0",
-        "uglify-js": "1.3.5",
         "combine-source-map": "~0.1.1"
 
     },
     "devDependencies": {
         "tap": "~0.4.0",
         "tape": "~0.2.2",
+        "uglify-js": "1.3.5",
         "convert-source-map": "~0.2.3",
         "parse-base64vlq-mappings": "~0.1.1"
     },
     "scripts": {
-        "test": "tap test/*.js"
+        "test": "tap test/*.js",
+        "prepublish": "node bin/prepublish.js"
     },
     "testling" : {
         "files" : "test/*.js",

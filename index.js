@@ -68,6 +68,7 @@ module.exports = function (opts) {
         entries = entries.filter(function (x) { return x !== undefined });
         
         this.queue('},{},' + JSON.stringify(entries) + ')');
+        if(opts.standalone) this.queue('(' + entries[0] + ')');
         if (sourcemap) this.queue('\n' + sourcemap.comment());
 
         this.queue(null);

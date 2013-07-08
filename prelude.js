@@ -7,9 +7,10 @@
 // anything defined in a previous bundle is accessed via the
 // orig method which is the requireuire for previous bundles
 
-(function(modules, cache, entry) {
+(function(modules, entry) {
     // Save the require from previous bundle to this closure if any
     var previousRequire = typeof require == "function" && require;
+    var cache = {};
 
     function newRequire(name, jumped){
         if(!cache[name]) {
@@ -35,6 +36,13 @@
         }
         return cache[name].exports;
     }
+
+    // A means of resetting the module cache when necessary; for example,
+    // between test runs.
+    newRequire.dumpCache = function() {
+        cache = {};
+    };
+
     for(var i=0;i<entry.length;i++) newRequire(entry[i]);
 
     // Override the current require with this new one

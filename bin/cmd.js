@@ -1,4 +1,4 @@
 #!/usr/bin/env node
 
-var pack = require('./')();
+var pack = require('../')();
 process.stdin.pipe(pack).pipe(process.stdout);

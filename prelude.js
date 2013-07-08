@@ -36,6 +36,13 @@
         }
         return cache[name].exports;
     }
+
+    // A means of resetting the module cache when necessary; for example,
+    // between test runs.
+    newRequire.dumpCache = function() {
+        cache = {};
+    };
+
     for(var i=0;i<entry.length;i++) newRequire(entry[i]);
 
     // Override the current require with this new one

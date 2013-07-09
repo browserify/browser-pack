@@ -7,9 +7,8 @@
         "browser-pack": "bin/cmd.js"
     },
     "dependencies": {
-        "JSONStream": "~0.4.3",
-        "duplexer": "~0.0.3",
-        "through": "~2.2.0",
+        "JSONStream": "~0.6.4",
+        "through": "~2.3.4",
         "combine-source-map": "~0.1.1"
 
     },

@@ -1,5 +1,4 @@
 var JSONStream = require('JSONStream');
-var duplexer = require('duplexer');
 var through = require('through');
 
 var fs = require('fs');
@@ -19,19 +18,22 @@ function newlinesIn(src) {
 module.exports = function (opts) {
     if (!opts) opts = {};
     var parser = opts.raw ? through() : JSONStream.parse([ true ]);
-    var output = through(write, end);
-    parser.pipe(output);
+    var stream = through(
+        function (buf) { parser.write(buf) },
+        function () { parser.end() }
+    );
+    parser.pipe(through(write, end));
     
     var first = true;
     var entries = [];
     
     var lineno = 1 + newlinesIn(prelude);
     var sourcemap;
-
-    return duplexer(parser, output);
+    
+    return stream;
     
     function write (row) {
-        if (first) this.queue((opts.prelude || prelude) + '({');
+        if (first) stream.queue((opts.prelude || prelude) + '({');
         
         if (row.sourceFile) { 
             sourcemap = sourcemap || combineSourceMap.create();
@@ -56,7 +58,7 @@ module.exports = function (opts) {
             ']'
         ].join('');
 
-        this.queue(wrappedSource);
+        stream.queue(wrappedSource);
         lineno += newlinesIn(wrappedSource);
         
         first = false;
@@ -67,12 +69,12 @@ module.exports = function (opts) {
     }
     
     function end () {
-        if (first) this.queue(prelude + '({');
+        if (first) stream.queue(prelude + '({');
         entries = entries.filter(function (x) { return x !== undefined });
         
-        this.queue('},{},' + JSON.stringify(entries) + ')');
-        if (sourcemap) this.queue('\n' + sourcemap.comment());
+        stream.queue('},{},' + JSON.stringify(entries) + ')');
+        if (sourcemap) stream.queue('\n' + sourcemap.comment());
 
-        this.queue(null);
+        stream.queue(null);
     }
 };

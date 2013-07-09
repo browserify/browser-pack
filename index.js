@@ -24,7 +24,6 @@ module.exports = function (opts) {
     
     var first = true;
     var entries = [];
-    var order = []; 
     
     var lineno = 1 + newlinesIn(prelude);
     var sourcemap;
@@ -49,7 +48,11 @@ module.exports = function (opts) {
             'function(require,module,exports){\n',
             combineSourceMap.removeComments(row.source),
             '\n},',
-            JSON.stringify(row.deps || {}),
+            '{' + Object.keys(row.deps || {}).sort().map(function (key) {
+                return JSON.stringify(key) + ':'
+                    + JSON.stringify(row.deps[key])
+                ;
+            }).join(',') + '}',
             ']'
         ].join('');
 

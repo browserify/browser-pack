@@ -6,7 +6,8 @@ var path = require('path');
 
 var combineSourceMap = require('combine-source-map');
 
-var prelude = fs.readFileSync(path.join(__dirname, '_prelude.js'), 'utf8');
+var defaultPrelude = fs.readFileSync(
+      path.join(__dirname, '_prelude.js'), 'utf8');
 
 function newlinesIn(src) {
   if (!src) return 0;
@@ -26,6 +27,7 @@ module.exports = function (opts) {
     
     var first = true;
     var entries = [];
+    var prelude = opts.prelude || defaultPrelude;
     
     var lineno = 1 + newlinesIn(prelude);
     var sourcemap;
@@ -34,7 +36,7 @@ module.exports = function (opts) {
     return stream;
     
     function write (row) {
-        if (first) stream.queue((opts.prelude || prelude) + '({');
+        if (first) stream.queue(prelude + '({');
         
         if (row.sourceFile && !seenSourceFiles[row.sourceFile]) { 
 	    seenSourceFiles[row.sourceFile] = true;

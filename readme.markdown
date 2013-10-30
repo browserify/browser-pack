@@ -66,6 +66,10 @@ You can specify a custom prelude with `opts.prelude` but you should really know
 what you're doing first. See the `prelude.js` file in this repo for the default
 prelude.
 
+If `opts.standalone` is given, this symbol will be exported by surrounding the
+packed code with a UMD wrapper. This wrapper is added before the prelude and
+contains the entire pack.
+
 # install
 
 With [npm](https://npmjs.org), to get the library do:

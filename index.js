@@ -1,5 +1,6 @@
 var JSONStream = require('JSONStream');
 var through = require('through');
+var umd = require('umd');
 
 var fs = require('fs');
 var path = require('path');
@@ -19,6 +20,7 @@ function newlinesIn(src) {
 module.exports = function (opts) {
     if (!opts) opts = {};
     var parser = opts.raw ? through() : JSONStream.parse([ true ]);
+    var standalone = opts.standalone || false;
     var stream = through(
         function (buf) { parser.write(buf) },
         function () { parser.end() }
@@ -29,10 +31,15 @@ module.exports = function (opts) {
     var entries = [];
     var prelude = opts.prelude || defaultPrelude;
     
+    if (standalone) {
+        prelude = umd.prelude(standalone) + 'return ' + prelude;
+    }
+
     var lineno = 1 + newlinesIn(prelude);
     var sourcemap;
     var seenSourceFiles = {};
-    
+    var mainModule = null;
+
     return stream;
     
     function write (row) {
@@ -66,10 +73,14 @@ module.exports = function (opts) {
         lineno += newlinesIn(wrappedSource);
         
         first = false;
-        if (row.entry && row.order !== undefined) {
-            entries[row.order] = row.id;
+        if (row.entry) {
+            mainModule = mainModule || row.id;
+            if (row.order !== undefined) {
+                entries[row.order] = row.id;
+            } else {
+                entries.push(row.id);
+            }
         }
-        else if (row.entry) entries.push(row.id);
     }
     
     function end () {
@@ -77,6 +88,10 @@ module.exports = function (opts) {
         entries = entries.filter(function (x) { return x !== undefined });
         
         stream.queue('},{},' + JSON.stringify(entries) + ')');
+        if (standalone) {
+            stream.queue('\n(' + mainModule + ')');
+            stream.queue(umd.postlude(standalone));
+        }
         if (sourcemap) stream.queue('\n' + sourcemap.comment());
 
         stream.queue(null);

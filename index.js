@@ -31,15 +31,13 @@ module.exports = function (opts) {
     
     var lineno = 1 + newlinesIn(prelude);
     var sourcemap;
-    var seenSourceFiles = {};
     
     return stream;
     
     function write (row) {
         if (first) stream.queue(prelude + '({');
         
-        if (row.sourceFile && !seenSourceFiles[row.sourceFile]) { 
-	    seenSourceFiles[row.sourceFile] = true;
+        if (row.sourceFile && !row.nomap) { 
             sourcemap = sourcemap || combineSourceMap.create();
             sourcemap.addFile(
                 { sourceFile: row.sourceFile, source: row.source },

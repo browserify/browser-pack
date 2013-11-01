@@ -37,7 +37,7 @@ module.exports = function (opts) {
     function write (row) {
         if (first) stream.queue(prelude + '({');
         
-        if (row.sourceFile && !row.nomap) { 
+        if (row.sourceFile && !row.nomap) {
             sourcemap = sourcemap || combineSourceMap.create();
             sourcemap.addFile(
                 { sourceFile: row.sourceFile, source: row.source },

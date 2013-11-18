@@ -75,7 +75,15 @@ module.exports = function (opts) {
         entries = entries.filter(function (x) { return x !== undefined });
         
         stream.queue('},{},' + JSON.stringify(entries) + ')');
-        if (sourcemap) stream.queue('\n' + sourcemap.comment());
+        if (sourcemap) {
+            var comment = sourcemap.comment();
+            if (opts.sourceMapPrefix) {
+                comment = comment.replace(
+                    /^\/\/#/, function () { return opts.sourceMapPrefix }
+                )
+            }
+            stream.queue('\n' + comment);
+        }
 
         stream.queue(null);
     }

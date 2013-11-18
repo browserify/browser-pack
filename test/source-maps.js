@@ -28,7 +28,7 @@ test('pack one file with source file field and one without', function (t) {
         var lastLine = grabLastLine(src);
         var sm = grabSourceMap(lastLine);
 
-        t.ok(/^\/\/@ sourceMappingURL/.test(lastLine), 'contains source mapping url as last line');
+        t.ok(/^\/\/# sourceMappingURL/.test(lastLine), 'contains source mapping url as last line');
         t.deepEqual(sm.sources, [ 'foo.js' ], 'includes mappings for sourceFile only');
         t.equal(sm.mappings, ';;;AAAA;AACA;AACA;AACA', 'adds offset mapping for each line' );
     });
@@ -62,7 +62,7 @@ test('pack two files with source file field', function (t) {
         var lastLine = grabLastLine(src);
         var sm = grabSourceMap(lastLine);
 
-        t.ok(/^\/\/@ sourceMappingURL/.test(lastLine), 'contains source mapping url as last line');
+        t.ok(/^\/\/# sourceMappingURL/.test(lastLine), 'contains source mapping url as last line');
         t.deepEqual(sm.sources, [ 'wunder/bar.js', 'foo.js' ], 'includes mappings for both files');
         t.equal(sm.mappings, ';AAAA;;ACAA;AACA;AACA;AACA', 'adds offset mapping for each line' );
     });
@@ -95,7 +95,7 @@ test('pack two files without source file field', function (t) {
         t.equal(r('xyz')(5), 555);
 
         var lastLine = grabLastLine(src); 
-        t.notOk(/^\/\/@ sourceMappingURL/.test(lastLine), 'contains no source mapping url');
+        t.notOk(/^\/\/# sourceMappingURL/.test(lastLine), 'contains no source mapping url');
     });
     
     p.end(JSON.stringify([
@@ -126,7 +126,7 @@ test('pack two files with source file field, one with nomap flag', function (t) 
         var lastLine = grabLastLine(src);
         var sm = grabSourceMap(lastLine);
 
-        t.ok(/^\/\/@ sourceMappingURL/.test(lastLine), 'contains source mapping url as last line');
+        t.ok(/^\/\/# sourceMappingURL/.test(lastLine), 'contains source mapping url as last line');
         t.deepEqual(sm.sources, [ 'wunder/bar.js' ], 'includes mappings for only the file without the "nomap" flag');
         t.equal(sm.mappings, ';AAAA', 'adds offset mapping for each line of mapped file' );
         t.end()

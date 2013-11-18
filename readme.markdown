@@ -59,6 +59,9 @@ fallback logic.
 If `opts.raw` is given, the writable end of the stream will expect objects to be
 written to it instead of expecting a stream of json text it will need to parse.
 
+If `opts.sourceMapPrefix` is given and source maps are computed, the
+`opts.sourceMapPrefix` string will be used instead of `//#`.
+
 Additionally, rows with a truthy `entry` may have an `order` field that
 determines the numeric index to execute the entries in.
 

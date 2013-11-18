@@ -148,3 +148,38 @@ test('pack two files with source file field, one with nomap flag', function (t) 
         }
     ]));
 });
+
+test('custom sourceMapPrefix for //@', function (t) {
+    t.plan(7);
+    
+    var p = pack({ sourceMapPrefix: '//@' });
+    var src = '';
+    p.on('data', function (buf) { src += buf });
+    p.on('end', function () {
+        var r = Function(['T'], 'return ' + src)(t);
+        t.equal(r('xyz')(5), 555);
+        t.equal(r('xyz')(5), 555);
+
+        var lastLine = grabLastLine(src);
+        var sm = grabSourceMap(lastLine);
+
+        t.ok(/^\/\/@ sourceMappingURL/.test(lastLine), 'contains source mapping url as last line');
+        t.deepEqual(sm.sources, [ 'foo.js' ], 'includes mappings for sourceFile only');
+        t.equal(sm.mappings, ';;;AAAA;AACA;AACA;AACA', 'adds offset mapping for each line' );
+    });
+    
+    p.end(JSON.stringify([
+        {
+            id: 'abc',
+            source: 'T.equal(require("./xyz")(3), 333)',
+            entry: true,
+            deps: { './xyz': 'xyz' }
+        },
+        {
+            id: 'xyz',
+            source: 'T.ok(true);\nmodule.exports=function(n){\n return n*111 \n}',
+            sourceFile: 'foo.js'
+        }
+    ]));
+});
+

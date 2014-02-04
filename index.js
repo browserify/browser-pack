@@ -27,6 +27,7 @@ module.exports = function (opts) {
     
     var first = true;
     var entries = [];
+    var requireFallback = opts.requireFallback;
     var prelude = opts.prelude || defaultPrelude;
     var preludePath = opts.preludePath || defaultPreludePath;
     
@@ -81,7 +82,7 @@ module.exports = function (opts) {
         if (first) stream.queue(prelude + '({');
         entries = entries.filter(function (x) { return x !== undefined });
         
-        stream.queue('},{},' + JSON.stringify(entries) + ')');
+        stream.queue('},{},' + JSON.stringify(entries) + ',' + requireFallback + ')');
         if (sourcemap) {
             var comment = sourcemap.comment();
             if (opts.sourceMapPrefix) {

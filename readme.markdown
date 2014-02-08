@@ -66,9 +66,13 @@ Additionally, rows with a truthy `entry` may have an `order` field that
 determines the numeric index to execute the entries in.
 
 You can specify a custom prelude with `opts.prelude` but you should really know
-what you're doing first. See the `prelude.js` file in this repo for the default
-prelude. If you specify a custom prelude, you must also specify a valid
-`opts.preludePath` to the prelude source file for sourcemaps to work.
+what you're doing first. If you specify a custom prelude, you must also
+specify a valid `opts.preludePath` to the prelude source file for sourcemaps
+to work.
+
+`prelude.js` is source of the default prelude.  For minimalism in the bundle,
+it is run through uglify first.  If you want to use `prelude.js` directly in
+the bundle for debugging purposes, set `opts.devPrelude` to `true`.
 
 # install
 

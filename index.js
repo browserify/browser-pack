@@ -24,20 +24,25 @@ module.exports = function (opts) {
         function () { parser.end() }
     );
     parser.pipe(through(write, end));
-    
+
     var first = true;
     var entries = [];
     var prelude = opts.prelude || defaultPrelude;
     var preludePath = opts.preludePath || defaultPreludePath;
-    
+
+    if (opts.devPrelude) {
+        preludePath = path.join(__dirname, 'prelude.js');
+        prelude = fs.readFileSync(preludePath, 'utf8');
+    }
+
     var lineno = 1 + newlinesIn(prelude);
     var sourcemap;
-    
+
     return stream;
-    
+
     function write (row) {
         if (first) stream.queue(prelude + '({');
-        
+
         if (row.sourceFile && !row.nomap) {
             if (!sourcemap) {
                 sourcemap = combineSourceMap.create();
@@ -51,7 +56,7 @@ module.exports = function (opts) {
                 { line: lineno }
             );
         }
-        
+
         var wrappedSource = [
             (first ? '' : ','),
             JSON.stringify(row.id),
@@ -69,18 +74,18 @@ module.exports = function (opts) {
 
         stream.queue(wrappedSource);
         lineno += newlinesIn(wrappedSource);
-        
+
         first = false;
         if (row.entry && row.order !== undefined) {
             entries[row.order] = row.id;
         }
         else if (row.entry) entries.push(row.id);
     }
-    
+
     function end () {
         if (first) stream.queue(prelude + '({');
         entries = entries.filter(function (x) { return x !== undefined });
-        
+
         stream.queue('},{},' + JSON.stringify(entries) + ')');
         if (sourcemap) {
             var comment = sourcemap.comment();

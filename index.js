@@ -110,7 +110,7 @@ module.exports = function (opts) {
                     /^\/\/#/, function () { return opts.sourceMapPrefix }
                 )
             }
-            stream.push(Buffer('\n' + comment));
+            stream.push(Buffer('\n' + comment + '\n'));
         }
         if (!sourcemap && !opts.standalone) stream.push(Buffer(';\n'));
 

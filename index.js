@@ -37,19 +37,18 @@ module.exports = function (opts) {
     var lineno = 1 + newlinesIn(prelude);
     var sourcemap;
     
-    var output = stream.pipe(through());
-    return duplexer(stream, output);
+    return stream;
     
     function write (row, enc, next) {
         if (first && opts.standalone) {
             var pre = umd.prelude(opts.standalone).trim();
-            stream.push(pre + 'return ');
+            stream.push(Buffer(pre + 'return '));
         }
         else if (first && stream.hasExports) {
             var pre = opts.externalRequireName || 'require';
-            stream.push(pre + '=');
+            stream.push(Buffer(pre + '='));
         }
-        if (first) stream.push(prelude + '({');
+        if (first) stream.push(Buffer(prelude + '({'));
         
         if (row.sourceFile && !row.nomap) {
             if (!sourcemap) {
@@ -80,7 +79,7 @@ module.exports = function (opts) {
             ']'
         ].join('');
 
-        stream.push(wrappedSource);
+        stream.push(Buffer(wrappedSource));
         lineno += newlinesIn(wrappedSource);
         
         first = false;
@@ -92,16 +91,16 @@ module.exports = function (opts) {
     }
     
     function end () {
-        if (first) stream.push(prelude + '({');
+        if (first) stream.push(Buffer(prelude + '({'));
         entries = entries.filter(function (x) { return x !== undefined });
         
-        stream.push('},{},' + JSON.stringify(entries) + ')');
+        stream.push(Buffer('},{},' + JSON.stringify(entries) + ')'));
         
         if (opts.standalone) {
-            stream.push(
+            stream.push(Buffer(
                 '(' + JSON.stringify(stream.standaloneModule) + ')'
                 + umd.postlude(opts.standalone)
-            );
+            ));
         }
         
         if (sourcemap) {
@@ -111,9 +110,9 @@ module.exports = function (opts) {
                     /^\/\/#/, function () { return opts.sourceMapPrefix }
                 )
             }
-            stream.push('\n' + comment);
+            stream.push(Buffer('\n' + comment));
         }
-        if (!sourcemap && !opts.standalone) stream.push(';\n');
+        if (!sourcemap && !opts.standalone) stream.push(Buffer(';\n'));
 
         stream.push(null);
     }

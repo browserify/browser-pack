@@ -1,6 +1,7 @@
 var JSONStream = require('JSONStream');
 var through = require('through2');
 var umd = require('umd');
+var duplexer = require('duplexer2');
 
 var fs = require('fs');
 var path = require('path');
@@ -36,7 +37,8 @@ module.exports = function (opts) {
     var lineno = 1 + newlinesIn(prelude);
     var sourcemap;
     
-    return stream;
+    var output = stream.pipe(through());
+    return duplexer(stream, output);
     
     function write (row, enc, next) {
         if (first && opts.standalone) {

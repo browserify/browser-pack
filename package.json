@@ -11,7 +11,7 @@
     "combine-source-map": "~0.3.0",
     "concat-stream": "~1.4.1",
     "through2": "~0.5.1",
-    "umd": "^2.1.0"
+    "umd": "cmaher/umd"
   },
   "devDependencies": {
     "tap": "~0.4.0",

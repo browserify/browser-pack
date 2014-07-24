@@ -41,8 +41,14 @@ module.exports = function (opts) {
     
     function write (row, enc, next) {
         if (first && opts.standalone) {
-            var pre = umd.prelude(opts.standalone).trim();
-            stream.push(Buffer(pre + 'return '));
+            var pre;
+            var standalone = opts.standalone;
+            if (typeof standalone === 'string') {
+              pre = umd.prelude(standalone);
+            } else {
+              pre = umd.prelude(standalone.name, standalone.cjs, standalone);
+            }
+            stream.push(Buffer(pre.trim() + 'return '));
         }
         else if (first && stream.hasExports) {
             var pre = opts.externalRequireName || 'require';
@@ -95,11 +101,19 @@ module.exports = function (opts) {
         entries = entries.filter(function (x) { return x !== undefined });
         
         stream.push(Buffer('},{},' + JSON.stringify(entries) + ')'));
-        
+
         if (opts.standalone) {
+          var standaloneName;
+
+          if (typeof opts.standalone === 'string') {
+              standaloneName = opts.standalone;
+            } else {
+              standaloneName = opts.standalone.name;
+            }
+
             stream.push(Buffer(
                 '(' + JSON.stringify(stream.standaloneModule) + ')'
-                + umd.postlude(opts.standalone)
+                + umd.postlude(standaloneName)
             ));
         }
         

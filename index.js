@@ -26,6 +26,7 @@ module.exports = function (opts) {
     );
     parser.pipe(through.obj(write, end));
     stream.standaloneModule = opts.standaloneModule;
+    stream.hasExports = opts.hasExports;
     
     var first = true;
     var entries = [];
@@ -42,9 +43,9 @@ module.exports = function (opts) {
             var pre = umd.prelude(opts.standalone).trim();
             stream.push(pre + 'return ');
         }
-        else if (first && opts.hasExports) {
+        else if (first && stream.hasExports) {
             var pre = opts.externalRequireName || 'require';
-            this.push(pre + '=');
+            stream.push(pre + '=');
         }
         if (first) stream.push(prelude + '({');
         

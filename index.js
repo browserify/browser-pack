@@ -1,5 +1,6 @@
 var JSONStream = require('JSONStream');
-var through = require('through');
+var through = require('through2');
+var umd = require('umd');
 
 var fs = require('fs');
 var path = require('path');
@@ -18,12 +19,13 @@ function newlinesIn(src) {
 
 module.exports = function (opts) {
     if (!opts) opts = {};
-    var parser = opts.raw ? through() : JSONStream.parse([ true ]);
-    var stream = through(
-        function (buf) { parser.write(buf) },
+    var parser = opts.raw ? through.obj() : JSONStream.parse([ true ]);
+    var stream = through.obj(
+        function (buf, enc, next) { parser.write(buf); next() },
         function () { parser.end() }
     );
-    parser.pipe(through(write, end));
+    parser.pipe(through.obj(write, end));
+    stream.standaloneModule = opts.standaloneModule;
     
     var first = true;
     var entries = [];
@@ -35,8 +37,16 @@ module.exports = function (opts) {
     
     return stream;
     
-    function write (row) {
-        if (first) stream.queue(prelude + '({');
+    function write (row, enc, next) {
+        if (first && opts.standalone) {
+            var pre = umd.prelude(opts.standalone).trim();
+            stream.push(pre + 'return ');
+        }
+        else if (first && opts.hasExports) {
+            var pre = opts.externalRequireName || 'require';
+            this.push(pre + '=');
+        }
+        if (first) stream.push(prelude + '({');
         
         if (row.sourceFile && !row.nomap) {
             if (!sourcemap) {
@@ -67,7 +77,7 @@ module.exports = function (opts) {
             ']'
         ].join('');
 
-        stream.queue(wrappedSource);
+        stream.push(wrappedSource);
         lineno += newlinesIn(wrappedSource);
         
         first = false;
@@ -75,13 +85,22 @@ module.exports = function (opts) {
             entries[row.order] = row.id;
         }
         else if (row.entry) entries.push(row.id);
+        next();
     }
     
     function end () {
-        if (first) stream.queue(prelude + '({');
+        if (first) stream.push(prelude + '({');
         entries = entries.filter(function (x) { return x !== undefined });
         
-        stream.queue('},{},' + JSON.stringify(entries) + ')');
+        stream.push('},{},' + JSON.stringify(entries) + ')');
+        
+        if (opts.standalone) {
+            stream.push(
+                '(' + JSON.stringify(stream.standaloneModule) + ')'
+                + umd.postlude(opts.standalone)
+            );
+        }
+        
         if (sourcemap) {
             var comment = sourcemap.comment();
             if (opts.sourceMapPrefix) {
@@ -89,9 +108,9 @@ module.exports = function (opts) {
                     /^\/\/#/, function () { return opts.sourceMapPrefix }
                 )
             }
-            stream.queue('\n' + comment);
+            stream.push('\n' + comment);
         }
 
-        stream.queue(null);
+        stream.push(null);
     }
 };

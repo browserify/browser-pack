@@ -110,6 +110,7 @@ module.exports = function (opts) {
             }
             stream.push('\n' + comment);
         }
+        if (!sourcemap && !opts.standalone) stream.push(';\n');
 
         stream.push(null);
     }

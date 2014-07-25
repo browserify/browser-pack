@@ -72,7 +72,7 @@ prelude. If you specify a custom prelude, you must also specify a valid
 
 `opts.standalone` external string name to use for umd
 
-`opts.standaloneNodule` sets the internal module name to export for standalone
+`opts.standaloneModule` sets the internal module name to export for standalone
 
 `opts.hasExports` whether the bundle should include `require=` (or the
 `opts.externalRequireName`) so that `require()` is available outside the bundle

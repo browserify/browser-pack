@@ -1,7 +1,6 @@
 var JSONStream = require('JSONStream');
 var through = require('through2');
 var umd = require('umd');
-var duplexer = require('duplexer2');
 
 var fs = require('fs');
 var path = require('path');

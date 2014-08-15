@@ -38,9 +38,24 @@ module.exports = function (opts) {
     
     return stream;
     
+    function getStandaloneName (filename) {
+        var standalone = opts.standalone;
+
+        if (standalone === true && filename) {
+            standalone = getDynamicStandaloneName(filename);
+        }
+
+        return standalone.toString();
+    }
+
+    function getDynamicStandaloneName (filename) {
+        return path.basename(filename).split('.')[0];
+    }
+
     function write (row, enc, next) {
         if (first && opts.standalone) {
-            var pre = umd.prelude(opts.standalone).trim();
+            var standalone = getStandaloneName(row.file);
+            var pre = umd.prelude(standalone).trim();
             stream.push(Buffer(pre + 'return '));
         }
         else if (first && stream.hasExports) {
@@ -96,9 +111,10 @@ module.exports = function (opts) {
         stream.push(Buffer('},{},' + JSON.stringify(entries) + ')'));
         
         if (opts.standalone) {
+            var standalone = getStandaloneName();
             stream.push(Buffer(
                 '(' + JSON.stringify(stream.standaloneModule) + ')'
-                + umd.postlude(opts.standalone)
+                + umd.postlude(standalone)
             ));
         }
         

@@ -10,6 +10,7 @@
     "JSONStream": "~0.8.4",
     "combine-source-map": "~0.3.0",
     "concat-stream": "~1.4.1",
+    "defined": "~0.0.0",
     "through2": "~0.5.1",
     "umd": "^2.1.0"
   },

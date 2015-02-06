@@ -1,6 +1,6 @@
 {
   "name": "browser-pack",
-  "version": "3.2.0",
+  "version": "4.0.0",
   "description": "pack node-style source files from a json stream into a browser bundle",
   "main": "index.js",
   "bin": {
@@ -15,14 +15,13 @@
     "umd": "^3.0.0"
   },
   "devDependencies": {
-    "tap": "~0.4.0",
-    "tape": "~0.2.2",
+    "tape": "^3.5.0",
     "uglify-js": "1.3.5",
     "convert-source-map": "~0.3.1",
     "parse-base64vlq-mappings": "~0.1.1"
   },
   "scripts": {
-    "test": "tap test/*.js",
+    "test": "tape test/*.js",
     "prepublish": "node bin/prepublish.js"
   },
   "testling": {

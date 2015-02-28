@@ -33,7 +33,8 @@ module.exports = function (opts) {
     var entries = [];
     var basedir = defined(opts.basedir, process.cwd());
     var prelude = opts.prelude || defaultPrelude;
-    var preludePath = opts.preludePath || path.relative(basedir, defaultPreludePath);
+    var preludePath = opts.preludePath ||
+        path.relative(basedir, defaultPreludePath).replace(/\\/g, '/');
     
     var lineno = 1 + newlinesIn(prelude);
     var sourcemap;

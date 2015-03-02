@@ -38,17 +38,31 @@ module.exports = function (opts) {
     
     var lineno = 1 + newlinesIn(prelude);
     var sourcemap;
-    
+
+    var externalRequireName = opts.externalRequireName || 'require';
+
+    if (opts.standalone) {
+        var umdContent = {
+            prelude: umd.prelude(opts.standalone).trim() + 'return (',
+            postlude: ');' + umd.postlude(opts.standalone)
+        };
+    }
+
     return stream;
     
     function write (row, enc, next) {
-        if (first && opts.standalone) {
-            var pre = umd.prelude(opts.standalone).trim();
-            stream.push(Buffer(pre + 'return '));
+        // If hasExports, output the bundle with an exposed require and no UMD
+        // wrapper, regardless of opts.standalone. See end() for UMD
+        // integration in this case.
+        if (first && stream.hasExports) {
+            stream.push(Buffer(externalRequireName + '='));
+            if (opts.standalone && row.expose !== undefined) {
+                stream.standaloneModule = row.expose;
+            }
         }
-        else if (first && stream.hasExports) {
-            var pre = opts.externalRequireName || 'require';
-            stream.push(Buffer(pre + '='));
+        // If opts.standalone && !hasExports, wrap the bundle with UMD.
+        else if (first && opts.standalone) {
+            stream.push(Buffer(umdContent.prelude));
         }
         if (first) stream.push(Buffer(prelude + '({'));
         
@@ -99,10 +113,24 @@ module.exports = function (opts) {
         stream.push(Buffer('},{},' + JSON.stringify(entries) + ')'));
         
         if (opts.standalone) {
-            stream.push(Buffer(
-                '(' + JSON.stringify(stream.standaloneModule) + ')'
-                + umd.postlude(opts.standalone)
-            ));
+            umdContent.src = '';
+
+            // Bundle was not wrapped with UMD because of hasExports. Now output
+            // UMD prelude to wrap a require(standaloneModuleName) call.
+            if (!!stream.hasExports) {
+                umdContent.src +=
+                    ';\n' +
+                    umdContent.prelude +
+                    externalRequireName
+                ;
+            }
+
+            umdContent.src +=
+                '(' + JSON.stringify(stream.standaloneModule) + ')' +
+                umdContent.postlude
+            ;
+
+            stream.push(Buffer(umdContent.src));
         }
         
         if (sourcemap) {

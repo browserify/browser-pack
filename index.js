@@ -117,7 +117,7 @@ module.exports = function (opts) {
 
             // Bundle was not wrapped with UMD because of hasExports. Now output
             // UMD prelude to wrap a require(standaloneModuleName) call.
-            if (!!stream.hasExports) {
+            if (stream.hasExports) {
                 umdContent.src +=
                     ';\n' +
                     umdContent.prelude +

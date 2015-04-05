@@ -2,6 +2,7 @@ var JSONStream = require('JSONStream');
 var defined = require('defined');
 var through = require('through2');
 var umd = require('umd');
+var removeRequire = require('remove-require');
 
 var fs = require('fs');
 var path = require('path');
@@ -66,12 +67,19 @@ module.exports = function (opts) {
             );
         }
         
+        var rowSource;
+        if (opts.standalone) {
+            rowSource = removeRequire(row.source);
+        } else {
+            rowSource = {name: 'require', src: row.source};
+        }
+        
         var wrappedSource = [
             (first ? '' : ','),
             JSON.stringify(row.id),
             ':[',
-            'function(require,module,exports){\n',
-            combineSourceMap.removeComments(row.source),
+            'function(' + rowSource.name + ',module,exports){\n',
+            combineSourceMap.removeComments(rowSource.src),
             '\n},',
             '{' + Object.keys(row.deps || {}).sort().map(function (key) {
                 return JSON.stringify(key) + ':'

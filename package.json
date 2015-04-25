@@ -7,10 +7,10 @@
     "browser-pack": "bin/cmd.js"
   },
   "dependencies": {
-    "JSONStream": "~0.8.4",
+    "JSONStream": "~0.10.0",
     "combine-source-map": "~0.3.0",
     "concat-stream": "~1.4.1",
-    "defined": "~0.0.0",
+    "defined": "^1.0.0",
     "through2": "~0.5.1",
     "umd": "^3.0.0"
   },

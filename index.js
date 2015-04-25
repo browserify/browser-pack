@@ -97,8 +97,8 @@ module.exports = function (opts) {
         entries = entries.filter(function (x) { return x !== undefined });
         
         stream.push(Buffer('},{},' + JSON.stringify(entries) + ')'));
-        
-        if (opts.standalone) {
+
+        if (opts.standalone && !first) {
             stream.push(Buffer(
                 '(' + JSON.stringify(stream.standaloneModule) + ')'
                 + umd.postlude(opts.standalone)

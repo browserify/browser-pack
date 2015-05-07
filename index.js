@@ -1,4 +1,4 @@
-var JSONStream = require('JSONStream');
+var JSONStream = require('jsonstream');
 var defined = require('defined');
 var through = require('through2');
 var umd = require('umd');

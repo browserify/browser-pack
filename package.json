@@ -11,6 +11,7 @@
     "combine-source-map": "~0.3.0",
     "concat-stream": "~1.4.1",
     "defined": "^1.0.0",
+    "shasum": "^1.0.1",
     "through2": "~0.5.1",
     "umd": "^3.0.0"
   },

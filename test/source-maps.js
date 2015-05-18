@@ -39,8 +39,8 @@ test('pack one file with source file field and one without', function (t) {
         var sm = grabSourceMap(lastLine);
 
         t.ok(/^\/\/# sourceMappingURL/.test(lastLine), 'contains source mapping url as last line');
-        t.deepEqual(sm.sources, [ '_prelude.js', 'foo.js' ], 'includes mappings for sourceFile and prelude only');
-        t.equal(sm.mappings, 'AAAA;;;ACAA;AACA;AACA;AACA', 'adds offset mapping for each line' );
+        t.deepEqual(sm.sources, [ 'foo.js' ], 'includes mappings for sourceFile and prelude only');
+        t.equal(sm.mappings, ';;;AAAA;AACA;AACA;;', 'adds offset mapping for each line' );
     });
     
     p.end(JSON.stringify([
@@ -73,8 +73,8 @@ test('pack two files with source file field', function (t) {
         var sm = grabSourceMap(lastLine);
 
         t.ok(/^\/\/# sourceMappingURL/.test(lastLine), 'contains source mapping url as last line');
-        t.deepEqual(sm.sources, [ '_prelude.js', 'wunder/bar.js', 'foo.js' ], 'includes mappings for both files and prelude');
-        t.equal(sm.mappings, 'AAAA;ACAA;;ACAA;AACA;AACA;AACA', 'adds offset mapping for each line' );
+        t.deepEqual(sm.sources, [ 'wunder/bar.js', 'foo.js' ], 'includes mappings for both files and prelude');
+        t.equal(sm.mappings, ';AAAA;;ACAA;AACA;AACA;;', 'adds offset mapping for each line' );
     });
     
     p.end(JSON.stringify([
@@ -137,8 +137,8 @@ test('pack two files with source file field, one with nomap flag', function (t) 
         var sm = grabSourceMap(lastLine);
 
         t.ok(/^\/\/# sourceMappingURL/.test(lastLine), 'contains source mapping url as last line');
-        t.deepEqual(sm.sources, [ '_prelude.js', 'wunder/bar.js' ], 'includes mappings for only the file without the "nomap" flag and prelude');
-        t.equal(sm.mappings, 'AAAA;ACAA', 'adds offset mapping for each line of mapped file' );
+        t.deepEqual(sm.sources, [ 'wunder/bar.js' ], 'includes mappings for only the file without the "nomap" flag and prelude');
+        t.equal(sm.mappings, ';AAAA;;;;;;', 'adds offset mapping for each line of mapped file' );
         t.end()
     });
     
@@ -174,8 +174,8 @@ test('custom sourceMapPrefix for //@', function (t) {
         var sm = grabSourceMap(lastLine);
 
         t.ok(/^\/\/@ sourceMappingURL/.test(lastLine), 'contains source mapping url as last line');
-        t.deepEqual(sm.sources, [ '_prelude.js', 'foo.js' ], 'includes mappings for sourceFile and prelude only');
-        t.equal(sm.mappings, 'AAAA;;;ACAA;AACA;AACA;AACA', 'adds offset mapping for each line' );
+        t.deepEqual(sm.sources, [ 'foo.js' ], 'includes mappings for sourceFile and prelude only');
+        t.equal(sm.mappings, ';;;AAAA;AACA;AACA;;', 'adds offset mapping for each line' );
     });
     
     p.end(JSON.stringify([

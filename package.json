@@ -8,9 +8,9 @@
   },
   "dependencies": {
     "JSONStream": "^1.0.3",
-    "combine-source-map": "~0.6.1",
     "concat-stream": "~1.4.1",
     "defined": "^1.0.0",
+    "inline-sourcemap-concat": "^0.1.0",
     "through2": "^1.0.0",
     "umd": "^3.0.0"
   },

@@ -11,6 +11,8 @@ var combineSourceMap = require('combine-source-map');
 var defaultPreludePath = path.join(__dirname, '_prelude.js');
 var defaultPrelude = fs.readFileSync(defaultPreludePath, 'utf8');
 
+var sourcemap;
+
 function newlinesIn(src) {
   if (!src) return 0;
   var newlines = src.match(/\n/g);
@@ -30,6 +32,7 @@ module.exports = function (opts) {
     stream.hasExports = opts.hasExports;
     
     var first = true;
+    var cachedFiles = Object.keys(opts.cache);
     var entries = [];
     var basedir = defined(opts.basedir, process.cwd());
     var prelude = opts.prelude || defaultPrelude;
@@ -37,7 +40,6 @@ module.exports = function (opts) {
         path.relative(basedir, defaultPreludePath).replace(/\\/g, '/');
     
     var lineno = 1 + newlinesIn(prelude);
-    var sourcemap;
     
     return stream;
     
@@ -60,10 +62,12 @@ module.exports = function (opts) {
                     { line: 0 }
                 );
             }
-            sourcemap.addFile(
-                { sourceFile: row.sourceFile, source: row.source },
-                { line: lineno }
-            );
+            if (cachedFiles.indexOf(row.file) == -1) {
+                sourcemap.addFile(
+                    { sourceFile: row.sourceFile, source: row.source },
+                    { line: lineno }
+                );
+            }
         }
         
         var wrappedSource = [

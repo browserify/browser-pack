@@ -64,12 +64,12 @@ module.exports = function (opts) {
                 { line: lineno }
             );
         }
-        
+
         var wrappedSource = [
             (first ? '' : ','),
             JSON.stringify(row.id),
             ':[',
-            'function(require,module,exports){\n',
+            'function(require,module,exports,__dirname,__filename){\n',
             combineSourceMap.removeComments(row.source),
             '\n},',
             '{' + Object.keys(row.deps || {}).sort().map(function (key) {
@@ -77,7 +77,11 @@ module.exports = function (opts) {
                     + JSON.stringify(row.deps[key])
                 ;
             }).join(',') + '}',
-            ']'
+            ',\n',
+            JSON.stringify(row.id),
+            ',\n',
+            JSON.stringify(path.dirname(row.id)),
+            '\n]'
         ].join('');
 
         stream.push(Buffer(wrappedSource));

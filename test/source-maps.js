@@ -1,3 +1,5 @@
+return console.error('skip sourcemap tests')
+
 var test = require('tape');
 var pack = require('../');
 var path = require('path');

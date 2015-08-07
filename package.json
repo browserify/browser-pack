@@ -1,6 +1,6 @@
 {
   "name": "nodepack",
-  "version": "3.2.0",
+  "version": "6.0.0"
   "description": "pack browserify bundles for node",
   "main": "index.js",
   "bin": {

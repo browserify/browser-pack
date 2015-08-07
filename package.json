@@ -1,7 +1,7 @@
 {
-  "name": "browser-pack",
-  "version": "5.0.1",
-  "description": "pack node-style source files from a json stream into a browser bundle",
+  "name": "nodepack",
+  "version": "6.0.0",
+  "description": "pack browserify bundles for node",
   "main": "index.js",
   "bin": {
     "browser-pack": "bin/cmd.js"

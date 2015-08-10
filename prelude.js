@@ -11,7 +11,7 @@
     // Save the require from previous bundle to this closure if any
     var previousRequire = typeof require == "function" && require;
 
-    function newRequire(name, jumped){
+    function newRequire(name, jumped, parent){
         if(!cache[name]) {
             if(!modules[name]) {
                 // if we cannot find the module within our internal map or
@@ -29,11 +29,12 @@
                 err.code = 'MODULE_NOT_FOUND';
                 throw err;
             }
-            var m = cache[name] = {exports:{}};
+            var m = cache[name] = {exports:{}, parent: parent};
             modules[name][0].call(m.exports, function(x){
                 var id = modules[name][1][x];
-                return newRequire(id ? id : x);
-            },m,m.exports,outer,modules,cache,entry);
+                return newRequire(id ? id : x, null, m);
+//            },m,m.exports,outer,modules,cache,entry);
+            },m,m.exports, modules[name][2], modules[name][3]);
         }
         return cache[name].exports;
     }

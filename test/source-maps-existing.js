@@ -1,3 +1,4 @@
+return console.error('skip sourcemap tests')
 var test = require('tap').test;
 var pack = require('../');
 var convert = require('convert-source-map');

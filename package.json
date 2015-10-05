@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "JSONStream": "^1.0.3",
-    "combine-source-map": "~0.6.1",
+    "combine-source-map": "^0.7.1",
     "defined": "^1.0.0",
     "through2": "^1.0.0",
     "umd": "^3.0.0"

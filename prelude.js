@@ -2,10 +2,10 @@
 // modules are defined as an array
 // [ module function, map of requireuires ]
 //
-// map of requireuires is short require name -> numeric require
+// map of requires is short require name -> numeric require
 //
 // anything defined in a previous bundle is accessed via the
-// orig method which is the requireuire for previous bundles
+// orig method which is the require for previous bundles
 
 (function outer (modules, cache, entry) {
     // Save the require from previous bundle to this closure if any

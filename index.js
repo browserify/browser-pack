@@ -46,10 +46,6 @@ module.exports = function (opts) {
             var pre = umd.prelude(opts.standalone).trim();
             stream.push(Buffer(pre + 'return '));
         }
-        else if (first && stream.hasExports) {
-            var pre = opts.externalRequireName || 'require';
-            stream.push(Buffer(pre + '='));
-        }
         if (first) stream.push(Buffer(prelude + '({'));
         
         if (row.sourceFile && !row.nomap) {
@@ -96,7 +92,16 @@ module.exports = function (opts) {
         if (first) stream.push(Buffer(prelude + '({'));
         entries = entries.filter(function (x) { return x !== undefined });
         
-        stream.push(Buffer('},{},' + JSON.stringify(entries) + ')'));
+        var postlude = [
+            '}',
+            '{}',
+            JSON.stringify(entries),
+            'this', // this === window
+            stream.hasExports ? 'true' : 'false',
+            JSON.stringify(opts.externalRequireName || 'require')
+        ].join(',');
+
+        stream.push(Buffer(postlude + ')'));
 
         if (opts.standalone && !first) {
             stream.push(Buffer(

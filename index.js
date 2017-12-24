@@ -7,6 +7,7 @@ var fs = require('fs');
 var path = require('path');
 
 var combineSourceMap = require('combine-source-map');
+var esm = require('./esm');
 
 var defaultPreludePath = path.join(__dirname, '_prelude.js');
 var defaultPrelude = fs.readFileSync(defaultPreludePath, 'utf8');
@@ -25,7 +26,7 @@ module.exports = function (opts) {
         function (buf, enc, next) { parser.write(buf); next() },
         function () { parser.end() }
     );
-    parser.pipe(through.obj(write, end));
+    parser.pipe(esm()).pipe(through.obj(write, end));
     stream.standaloneModule = opts.standaloneModule;
     stream.hasExports = opts.hasExports;
     

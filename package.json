@@ -8,8 +8,11 @@
   },
   "dependencies": {
     "JSONStream": "^1.0.3",
+    "acorn": "^5.2.1",
     "combine-source-map": "~0.8.0",
     "defined": "^1.0.0",
+    "estree-assign-parent": "^1.0.0",
+    "scope-analyzer": "^1.0.0",
     "through2": "^2.0.0",
     "umd": "^3.0.0"
   },

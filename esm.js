@@ -29,6 +29,15 @@ module.exports = function esm () {
           string: node.declaration.id ? '' : 'var _esmDefault = '
         });
       }
+      if (node.type === 'ExportNamedDeclaration') {
+        if (node.declaration) {
+          // Only erase the `export` bit before `export var`
+          patches.push({ start: node.start, end: node.declaration.start, string: '' })
+        } else {
+          // Erase the entire declaration
+          patches.push({ start: node.start, end: node.end, string: '' })
+        }
+      }
       if (node.type === 'ImportDeclaration') {
         patches.push({ start: node.start, end: node.end, string: '' });
       }
@@ -38,16 +47,17 @@ module.exports = function esm () {
     var setup = ''
     if (row.esm) {
       if (row.esm.exports.length > 0) {
-        setup += 'function _esmSet(){throw new Error(\'Assignment to constant variable.\')}Object.defineProperties(exports, ['
+        // Define getters for exports to support live bindings, and to prevent writes to them from outside this module
+        setup += 'function _esmSet(){throw new Error(\'Assignment to constant variable.\')}Object.defineProperties(exports, {'
         row.esm.exports.forEach(function (record, i) {
           if (i > 0) setup += ','
           if (record.name === 'default' && !record.as && !record.export) {
-            setup += '{key:"default",get:function(){return ' + esmDefaultName + '},set:_esmSet}'
+            setup += 'default:{get:function(){return ' + esmDefaultName + '},set:_esmSet,enumerable:true}'
           } else {
-            setup += '{key:' + JSON.stringify(record.as) + ',get:function(){return ' + record.export + '},set:_esmSet}'
+            setup += JSON.stringify(record.as) + ':{get:function(){return ' + record.export + '},set:_esmSet,enumerable:true}'
           }
         });
-        setup += ']);'
+        setup += '});'
       }
 
       var needInterop = false;

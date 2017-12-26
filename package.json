@@ -8,17 +8,21 @@
   },
   "dependencies": {
     "JSONStream": "^1.0.3",
+    "acorn": "^5.2.1",
     "combine-source-map": "~0.8.0",
     "defined": "^1.0.0",
+    "estree-assign-parent": "^1.0.0",
+    "scope-analyzer": "^1.1.1",
     "through2": "^2.0.0",
     "umd": "^3.0.0"
   },
   "devDependencies": {
-    "tap": "^10.7.2",
-    "uglify-js": "1.3.5",
     "concat-stream": "~1.5.1",
     "convert-source-map": "~1.1.0",
-    "parse-base64vlq-mappings": "~0.1.1"
+    "dedent": "^0.7.0",
+    "parse-base64vlq-mappings": "~0.1.1",
+    "tap": "^10.7.2",
+    "uglify-js": "1.3.5"
   },
   "scripts": {
     "test": "tap test/*.js",

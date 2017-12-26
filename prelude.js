@@ -29,11 +29,29 @@
                 err.code = 'MODULE_NOT_FOUND';
                 throw err;
             }
-            var m = cache[name] = {exports:{}};
-            modules[name][0].call(m.exports, function(x){
+            var e = {}, m = cache[name] = {exports:e};
+            function subReq(x){
                 var id = modules[name][1][x];
                 return newRequire(id ? id : x);
-            },m,m.exports,outer,modules,cache,entry);
+            }
+            // If [2] is truthy this is an ES module.
+            // ES modules expose exports by calling a function with
+            // [name, getter (for live bindings)] pairs.
+            if(modules[name][2]) {
+                modules[name][0].call(undefined, subReq, function(obj) {
+                    var exp = Object.keys(obj);
+                    for (var i = 0; i < exp.length; i++) {
+                        Object.defineProperty(e, exp[i], {
+                            get: obj[exp[i]],
+                            set: function () { throw new Error('Assignment to constant variable.') },
+                            enumerable: true
+                        });
+                    }
+                });
+            }
+            else {
+                modules[name][0].call(m.exports, subReq,m,m.exports,outer,modules,cache,entry);
+            }
         }
         return cache[name].exports;
     }

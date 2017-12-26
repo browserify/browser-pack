@@ -48,13 +48,13 @@ module.exports = function esm () {
     if (row.esm) {
       if (row.esm.exports.length > 0) {
         // Define getters for exports to support live bindings, and to prevent writes to them from outside this module
-        setup += 'function _esmSet(){throw new Error(\'Assignment to constant variable.\')}Object.defineProperties(exports, {'
+        setup += '_esmExport({'
         row.esm.exports.forEach(function (record, i) {
           if (i > 0) setup += ','
           if (record.name === 'default' && !record.as && !record.export) {
-            setup += 'default:{get:function(){return ' + esmDefaultName + '},set:_esmSet,enumerable:true}'
+            setup += 'default:function(){return ' + esmDefaultName + '}'
           } else {
-            setup += JSON.stringify(record.as) + ':{get:function(){return ' + record.export + '},set:_esmSet,enumerable:true}'
+            setup += JSON.stringify(record.as) + ':function(){return ' + record.export + '}'
           }
         });
         setup += '});'
@@ -68,14 +68,14 @@ module.exports = function esm () {
           if (record.import !== 'default') {
             throw new Error('The requested module does not provide an export named \'' + record.import + '\'')
           }
-          setup += 'var ' + record.as + ' = ' + 'require(' + JSON.stringify(record.from) + ');';
+          setup += 'var ' + record.as + ' = ' + '_esmRequire(' + JSON.stringify(record.from) + ');';
           return;
         }
 
         var base = baseImports[record.from];
         if (!base) {
           base = baseImports[record.from] = '_esmImport' + i;
-          setup += 'var ' + base + ' = require(' + JSON.stringify(record.from) + ');';
+          setup += 'var ' + base + ' = _esmRequire(' + JSON.stringify(record.from) + ');';
         }
         binding.references.forEach(function (ref, i) {
           if (ref === binding.definition) return

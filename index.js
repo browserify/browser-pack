@@ -71,7 +71,7 @@ module.exports = function (opts) {
             (first ? '' : ','),
             JSON.stringify(row.id),
             ':[',
-            'function(require,module,exports){\n',
+            row.esm ? 'function(_esmRequire,_esmExport){\n' : 'function(require,module,exports){\n',
             combineSourceMap.removeComments(row.source),
             '\n},',
             '{' + Object.keys(row.deps || {}).sort().map(function (key) {
@@ -79,6 +79,7 @@ module.exports = function (opts) {
                     + JSON.stringify(row.deps[key])
                 ;
             }).join(',') + '}',
+            row.esm ? ',1' : '',
             ']'
         ].join('');
 

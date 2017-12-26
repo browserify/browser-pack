@@ -4,7 +4,7 @@ var pack = require('../');
 var vm = require('vm');
 
 test('esm', function (t) {
-    t.plan(3);
+    t.plan(6);
 
     var p = pack({ raw: true });
     var src = '';
@@ -23,6 +23,17 @@ test('esm', function (t) {
             var cur = expected.shift()
             t.ok(a === cur[0] && b === cur[1])
         }
+    });
+
+    p.write({
+        id: 'test',
+        entry: true,
+        esm: { imports: [], exports: [] },
+        source: dedent`
+            T.equal(typeof require, 'undefined')
+            T.equal(typeof module, 'undefined')
+            T.equal(typeof exports, 'undefined')
+        `
     });
 
     p.write({

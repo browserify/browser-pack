@@ -1,4 +1,5 @@
 var test = require('tap').test;
+var dedent = require('dedent');
 var pack = require('../');
 var vm = require('vm');
 
@@ -15,9 +16,7 @@ test('esm', function (t) {
             ['value', 5]
         ]
         vm.runInNewContext(src, {
-            setTimeout: setTimeout,
-            setInterval: setInterval,
-            clearInterval: clearInterval,
+            T: t,
             console: { log: log }
         });
         function log (a, b) {
@@ -38,7 +37,15 @@ test('esm', function (t) {
             ],
             exports: []
         },
-        source: 'import x from "x"; import y from "y"; import { c as renamed, x as i } from "z"; y.b(x); x(renamed); setTimeout(function(){ x(renamed); clearInterval(i) }, 50)'
+        source: dedent`
+            import x from "x";
+            import y from "y";
+            import { c as renamed, x as i } from "z";
+            y.b(x);
+            x(renamed);
+            i()
+            x(renamed);
+        `
     })
     // Test importing a CommonJS module
     p.write({
@@ -55,7 +62,7 @@ test('esm', function (t) {
                 { export: 'x', as: 'x' }
             ]
         },
-        source: 'export var c = 0; export var x = setInterval(function(){ c++ }, 10)'
+        source: 'export var c = 0; export var x = function(){ c += 5 }'
     })
     p.end({
         id: 'x',

@@ -10,6 +10,7 @@
     "JSONStream": "^1.0.3",
     "combine-source-map": "~0.8.0",
     "defined": "^1.0.0",
+    "safe-buffer": "^5.1.1",
     "through2": "^2.0.0",
     "umd": "^3.0.0"
   },

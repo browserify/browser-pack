@@ -2,6 +2,7 @@ var JSONStream = require('JSONStream');
 var defined = require('defined');
 var through = require('through2');
 var umd = require('umd');
+var Buffer = require('safe-buffer').Buffer;
 
 var fs = require('fs');
 var path = require('path');

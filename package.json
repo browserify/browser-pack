@@ -41,9 +41,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/substack/browser-pack.git"
+    "url": "git://github.com/browserify/browser-pack.git"
   },
-  "homepage": "https://github.com/substack/browser-pack",
+  "homepage": "https://github.com/browserify/browser-pack",
   "keywords": [
     "browser",
     "bundle",

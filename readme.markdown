@@ -2,8 +2,6 @@
 
 pack node-style source files from a json stream into a browser bundle
 
-[![browser support](http://ci.testling.com/substack/browser-pack.png)](http://ci.testling.com/substack/browser-pack)
-
 [![build status](https://secure.travis-ci.org/browserify/browser-pack.png)](http://travis-ci.org/browserify/browser-pack)
 
 # example

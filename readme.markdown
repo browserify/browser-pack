@@ -92,6 +92,22 @@ and to get the command-line tool do:
 npm install -g browser-pack
 ```
 
+# input objects
+
+Input objects are written to browser-pack using `bpack.write(row)`. browser-pack
+uses these properties:
+
+ - `id` - A unique ID for this module.
+ - `deps` - An object mapping `require()` argument strings to dependency row
+   IDs, used for resolution at runtime.
+ - `entry` - When true, this module will be executed when the bundle loads.
+   Otherwise, it will only be executed once some other module `require()`s it.
+ - `order` - When `row.entry` is true, this number indicates the order in which
+   different entry modules are executed.
+ - `source` - The contents of the module.
+ - `nomap` - When true, a source map is not generated for this module.
+ - `sourceFile` - The file name to use for this module in the source map.
+
 # license
 
 MIT

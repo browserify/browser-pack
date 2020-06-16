@@ -11,7 +11,9 @@ jobs:
         - node_js: '0.12'
           before_script: npm run prepare
         - node_js: '4'
+          before_script: npm run prepare
         - node_js: '6'
+          before_script: npm run prepare
         - node_js: '8'
         - node_js: '10'
         - node_js: '12'

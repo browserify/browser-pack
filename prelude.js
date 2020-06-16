@@ -1,4 +1,3 @@
-
 // modules are defined as an array
 // [ module function, map of requireuires ]
 //
@@ -31,7 +30,7 @@ function outer(modules, cache, entry) {
                 err.code = 'MODULE_NOT_FOUND';
                 throw err;
             }
-            var m = cache[name] = {exports:{}};
+            var m = cache[name] = {exports:{},require:newRequire};
             modules[name][0].call(m.exports, function(x){
                 var id = modules[name][1][x];
                 return newRequire(id ? id : x);

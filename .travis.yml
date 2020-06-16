@@ -1,21 +1,49 @@
 language: node_js
-os:
-    - linux
-    - windows
 dist: bionic
 
 jobs:
     include:
         - node_js: '0.10'
           before_script: npm run prepare
+          os: linux
         - node_js: '0.12'
           before_script: npm run prepare
+          os: linux
         - node_js: '4'
           before_script: npm run prepare
+          os: linux
         - node_js: '6'
           before_script: npm run prepare
+          os: linux
         - node_js: '8'
+          os: linux
         - node_js: '10'
+          os: linux
         - node_js: '12'
+          os: linux
         - node_js: '13'
+          os: linux
         - node_js: 'stable'
+          os: linux
+        - node_js: '0.10'
+          before_script: npm run prepare
+          os: windows
+        - node_js: '0.12'
+          before_script: npm run prepare
+          os: windows
+        - node_js: '4'
+          before_script: npm run prepare
+          os: windows
+        - node_js: '6'
+          before_script: npm run prepare
+          os: windows
+        - node_js: '8'
+          os: windows
+        - node_js: '10'
+          os: windows
+        - node_js: '12'
+          os: windows
+        - node_js: '13'
+          os: windows
+        - node_js: 'latest'
+          os: windows

@@ -19,7 +19,7 @@
     "convert-source-map": "~1.1.0",
     "parse-base64vlq-mappings": "~0.1.1",
     "tap": "^10.7.2",
-    "uglify-js": "^2.8.29"
+    "uglify-js": "^3.12.8"
   },
   "scripts": {
     "test": "tap test/*.js",

@@ -7,7 +7,10 @@ var path = require('path');
 
 var uglify = spawn(
     process.execPath,
-    [require.resolve('uglify-js/bin/uglifyjs'), '--wrap-iife', '-c', 'side_effects=false,screw_ie8=false', '--verbose', '--ie8', '--passes=5', '-m', '--source-map', '--', '-']
+    [require.resolve('uglify-js/bin/uglifyjs'), '-c', 'unused=false,expression=true', '--ie8', '-m'],
+    {
+        stdio: ['pipe', 'pipe', 'inherit']
+    }
 );
 
 fs.createReadStream(path.join(__dirname, '..', 'prelude.js'))
